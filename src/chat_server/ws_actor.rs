@@ -71,7 +71,17 @@ impl Handler<ClientMessage> for WsActor {
     type Result = ();
 
     fn handle(&mut self, msg: ClientMessage, _: &mut Context<Self>) {
+        use crate::repository::chat::{NewChat, create_chat};
+
         println!("{}", msg.msg);
-        self.send_message(&msg.msg);
+
+        // isnert into chats DB
+        // TODO: error handling
+        let chat: NewChat = serde_json::from_str(&msg.msg)
+            .expect("invalid struct for NewChat");
+        let json = serde_json::to_string(&create_chat(chat))
+            .expect("invalid struct for Chat");
+        
+        self.send_message(&json);
     }
 }
