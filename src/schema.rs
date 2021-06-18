@@ -8,6 +8,22 @@ table! {
 }
 
 table! {
+    my_datas (id) {
+        id -> Int4,
+        my_id -> Varchar,
+        password -> Varchar,
+        name -> Varchar,
+    }
+}
+
+table! {
+    rooms (id) {
+        id -> Int4,
+        name -> Varchar,
+    }
+}
+
+table! {
     users (id) {
         id -> Int4,
         name -> Varchar,
@@ -17,5 +33,7 @@ table! {
 
 allow_tables_to_appear_in_same_query!(
     chats,
+    my_datas,
+    rooms,
     users,
 );

@@ -1,0 +1,6 @@
+CREATE TABLE my_datas (
+  id SERIAL PRIMARY KEY,
+  my_id VARCHAR NOT NULL,
+  password VARCHAR NOT NULL,
+  name VARCHAR NOT NULL
+);

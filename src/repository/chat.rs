@@ -11,12 +11,12 @@ pub struct Chat {
     content: String,
 }
 
-pub fn get_all_chats() -> String {
+pub fn get_all_chats(queryed_id: i32) -> String {
     use crate::schema::chats::dsl::*;
 
     let conn = establish_connection();
     let results = chats
-        .limit(5)
+        .filter(room_id.eq(queryed_id))
         .load::<Chat>(&conn)
         .expect("Error loading posts");
 
