@@ -15,13 +15,15 @@ use std::time::{Instant};
 
 use actix::prelude::*;
 use actix_web_actors::ws;
-use actix_web::{web, get, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{http, web, get, post, App, Error, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_cors::Cors;
 
 use crate::chat_server::main_actor::{WsSession};
 use crate::chat_server::ws_actor::{WsActor};
 use crate::repository::user::get_all_users;
-use crate::repository::chat::{get_all_chats};
+use crate::repository::chat::get_all_chats;
+use crate::repository::room::get_all_rooms;
+use crate::repository::my_data::{register_my_data, NewMyData};
 
 pub async fn ws_route(
     req: HttpRequest,
@@ -40,9 +42,19 @@ async fn all_user() -> impl Responder {
     get_all_users()
 }
 
-#[get("/chat/all")]
-async fn all_chat() -> impl Responder {
-    get_all_chats()
+#[get("/chat/all/{room_id}")]
+async fn all_chat(room_id: web::Path<i32>) -> impl Responder {
+    get_all_chats(room_id.0)
+}
+
+#[get("/room/all")]
+async fn all_room() -> impl Responder {
+    get_all_rooms()
+}
+
+#[post("/mydata/new")]
+async fn my_data_home(new_my_data: web::Json<NewMyData>) -> impl Responder {
+    register_my_data(new_my_data.into_inner())
 }
 
 #[actix_rt::main]
@@ -51,7 +63,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://localhost:3000")
-            .allowed_methods(vec!["GET", "POST"]);
+            .allowed_methods(vec!["GET", "POST"])
+            .allowed_header(http::header::CONTENT_TYPE);
         App::new()
             .wrap(cors)
             .service(web::scope("/ws")
@@ -59,7 +72,8 @@ async fn main() -> std::io::Result<()> {
                 .service(web::resource("/").to(ws_route)))
             .service(web::scope("rest")
                 .service(all_user)
-                .service(all_chat))
+                .service(all_chat)
+                .service(my_data_home))
     })
     .bind("127.0.0.1:8080")?
     .run()
