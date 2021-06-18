@@ -44,9 +44,7 @@ async fn all_user() -> impl Responder {
 
 #[get("/chat/all/{room_id}")]
 async fn all_chat(room_id: web::Path<i32>) -> impl Responder {
-    let ret = get_all_chats(room_id.0);
-    println!("{}", ret);
-    ret
+    get_all_chats(room_id.0)
 }
 
 #[get("/room/all")]
@@ -65,7 +63,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://localhost:3000")
-            .allowed_methods(vec!["GET", "POST", "HEAD"])
+            .allowed_methods(vec!["GET", "POST"])
             .allowed_header(http::header::CONTENT_TYPE);
         App::new()
             .wrap(cors)
