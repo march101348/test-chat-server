@@ -1,12 +1,10 @@
 use actix::prelude::*;
 use actix_cors::Cors;
-use actix_web::{
-    http, web, App, HttpServer,
-};
+use actix_web::{http, web, App, HttpServer};
 
-use crate::application::web_socket::ws_actor::WsActor;
 use super::http::routes::*;
 use super::web_socket::routes::*;
+use crate::application::web_socket::ws_actor::WsActor;
 
 pub async fn init() -> std::io::Result<()> {
     let ws_server = WsActor::new().start();

@@ -1,6 +1,4 @@
-use actix_web::{
-    get, post, web, Responder,
-};
+use actix_web::{get, post, web, Responder};
 
 use crate::domain::model::my_data::NewMyData;
 use crate::infra::chat_repository::ChatRepository;

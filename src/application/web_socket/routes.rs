@@ -1,9 +1,7 @@
-use std::time::Instant;
 use actix::prelude::*;
-use actix_web::{
-    web, Error, HttpRequest, HttpResponse
-};
+use actix_web::{web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
+use std::time::Instant;
 
 use super::super::web_socket::main_actor::WsSession;
 use super::super::web_socket::ws_actor::WsActor;

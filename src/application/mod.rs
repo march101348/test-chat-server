@@ -1,3 +1,3 @@
-pub mod web_socket;
 pub mod http;
 pub mod server;
+pub mod web_socket;
