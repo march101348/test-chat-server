@@ -1,7 +1,7 @@
+use super::ws_actor::{ClientMessage, Connect, Disconnect, Message, WsActor};
 use actix::*;
 use actix_web_actors::ws;
 use std::time::{Duration, Instant};
-use super::ws_actor::{WsActor, Connect, Disconnect, Message, ClientMessage};
 
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
@@ -14,11 +14,7 @@ pub struct WsSession {
 
 impl WsSession {
     pub fn new(id: u32, hb: Instant, addr: Addr<WsActor>) -> Self {
-        WsSession {
-            id,
-            hb,
-            addr,
-        }
+        WsSession { id, hb, addr }
     }
 
     fn hb(&self, ctx: &mut ws::WebsocketContext<Self>) {
@@ -42,7 +38,9 @@ impl Actor for WsSession {
 
         let addr = ctx.address();
         self.addr
-            .send(Connect { addr: addr.recipient() })
+            .send(Connect {
+                addr: addr.recipient(),
+            })
             .into_actor(self)
             .then(|res, act, ctx| {
                 match res {
@@ -55,8 +53,7 @@ impl Actor for WsSession {
     }
 
     fn stopping(&mut self, _: &mut Self::Context) -> Running {
-        self.addr
-            .do_send(Disconnect { id: self.id });
+        self.addr.do_send(Disconnect { id: self.id });
         Running::Stop
     }
 }
@@ -75,7 +72,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsSession {
             Err(_) => {
                 ctx.stop();
                 return;
-            },
+            }
             Ok(msg) => msg,
         };
 
@@ -89,11 +86,10 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsSession {
             }
             ws::Message::Text(text) => {
                 let m = text.trim();
-                self.addr
-                    .do_send(ClientMessage {
-                        id: self.id,
-                        msg: m.to_string(),
-                    })
+                self.addr.do_send(ClientMessage {
+                    id: self.id,
+                    msg: m.to_string(),
+                })
             }
             ws::Message::Binary(_) => println!("Unexpected binary"),
             ws::Message::Close(_) => {
