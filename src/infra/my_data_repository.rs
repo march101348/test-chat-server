@@ -15,4 +15,21 @@ impl MyDataService for MyDataRepository {
             .get_result::<MyData>(&conn)
             .expect("Error occurred during insert a new my data")
     }
+
+    fn get_my_data(&self, sign_in_data: SignInData) -> MyData {
+        use crate::schema::my_datas::dsl::*;
+
+        let conn = establish_connection();
+
+        // TODO: error handling
+        let mut results: Vec<MyData> = my_datas
+            .filter(my_id.eq(sign_in_data.my_id))
+            .filter(password.eq(sign_in_data.password))
+            .load::<MyData>(&conn)
+            .expect("Error loading posts");
+        if results.len() != 1 {
+            panic!("no match data for given sign in data");
+        }
+        results.pop().unwrap()
+    }
 }

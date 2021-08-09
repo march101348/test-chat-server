@@ -52,7 +52,6 @@ impl Handler<Connect> for WsActor {
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
         let client_id = rand::random::<u32>();
         self.sessions.insert(client_id, msg.addr);
-        self.send_message(&format!("{} connected!", client_id));
         client_id
     }
 }
@@ -62,7 +61,6 @@ impl Handler<Disconnect> for WsActor {
 
     fn handle(&mut self, msg: Disconnect, _: &mut Context<Self>) {
         let client_id = msg.id;
-        self.send_message(&format!("{} disconnected...", client_id));
         self.sessions.remove(&client_id);
     }
 }

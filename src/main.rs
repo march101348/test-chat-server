@@ -17,5 +17,5 @@ use crate::application::server;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    server::init().await
+    server::run().await
 }

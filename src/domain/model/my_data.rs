@@ -15,10 +15,25 @@ pub struct MyData {
     pub name: String,
 }
 
+impl MyData {
+    pub fn into_my_data_for_front(self) -> MyDataForFront {
+        MyDataForFront {
+            id: self.id,
+            name: self.name,
+        }
+    }
+}
+
 #[derive(Insertable, Deserialize)]
 #[table_name = "my_datas"]
 pub struct NewMyData {
     my_id: String,
     password: String,
     name: String,
+}
+
+#[derive(Deserialize)]
+pub struct SignInData {
+    pub my_id: String,
+    pub password: String,
 }

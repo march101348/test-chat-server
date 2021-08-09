@@ -6,7 +6,7 @@ use super::http::routes::*;
 use super::web_socket::routes::*;
 use crate::application::web_socket::ws_actor::WsActor;
 
-pub async fn init() -> std::io::Result<()> {
+pub async fn run() -> std::io::Result<()> {
     let ws_server = WsActor::new().start();
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -24,7 +24,8 @@ pub async fn init() -> std::io::Result<()> {
                 web::scope("rest")
                     .service(all_user)
                     .service(all_chat)
-                    .service(my_data_home),
+                    .service(signup_my_data)
+                    .service(signin_my_data),
             )
     })
     .bind("127.0.0.1:8080")?

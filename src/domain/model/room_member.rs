@@ -9,6 +9,6 @@ pub struct RoomMember {
 #[derive(Insertable, Deserialize)]
 #[table_name = "room_members"]
 pub struct NewRoomMember {
-    user_id: i32,
-    room_id: i32,
+    pub user_id: i32,
+    pub room_id: i32,
 }
