@@ -1,10 +1,10 @@
 use diesel::prelude::*;
 
-use crate::domain::model::room::{Room, NewRoom, NewRoomForFront};
+use crate::domain::model::room::{NewRoom, NewRoomForFront, Room};
 use crate::domain::model::room_member::NewRoomMember;
 use crate::domain::service::room_service::RoomService;
-use crate::schema::rooms;
 use crate::schema::room_members;
+use crate::schema::rooms;
 use crate::utils::dsl::establish_connection;
 
 pub struct RoomRepository;
@@ -21,7 +21,9 @@ impl RoomService for RoomRepository {
     }
 
     fn create_room(&self, new_room_front: NewRoomForFront) -> Room {
-        let new_room = NewRoom{name: new_room_front.name};
+        let new_room = NewRoom {
+            name: new_room_front.name,
+        };
         let conn = establish_connection();
         let room = diesel::insert_into(rooms::table)
             .values(&new_room)
@@ -29,7 +31,10 @@ impl RoomService for RoomRepository {
             .expect("Error occurred during insert a new room");
         new_room_front.member.into_iter().for_each(|user_id| {
             diesel::insert_into(room_members::table)
-                .values(&NewRoomMember{user_id, room_id: room.id})
+                .values(&NewRoomMember {
+                    user_id,
+                    room_id: room.id,
+                })
                 .execute(&conn)
                 .expect("Error occured during insert a new room member");
         });

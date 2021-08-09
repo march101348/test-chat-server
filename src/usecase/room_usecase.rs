@@ -1,5 +1,5 @@
-use crate::domain::service::room_service::RoomService;
 use crate::domain::model::room::NewRoomForFront;
+use crate::domain::service::room_service::RoomService;
 
 pub struct RoomUsecase<Service: RoomService> {
     service: Service,

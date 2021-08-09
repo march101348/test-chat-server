@@ -1,8 +1,8 @@
 use actix_web::{get, post, web, Responder};
 
 use crate::domain::model::my_data::NewMyData;
-use crate::domain::model::room::NewRoomForFront;
 use crate::domain::model::my_data::SignInData;
+use crate::domain::model::room::NewRoomForFront;
 use crate::infra::chat_repository::ChatRepository;
 use crate::infra::my_data_repository::MyDataRepository;
 use crate::infra::room_repository::RoomRepository;
